@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Env files (do not commit secrets)
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Build / output
+dist/
+build/
+coverage/
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Lock files (optional)
+# package-lock.json
+# yarn.lock
+
+# Misc
+.env.local
+
+# Ignore local npm debug and temp files
+.pnpm-debug.log
