@@ -1,34 +1,29 @@
-﻿// src/index.js
-// Punto de entrada inicial para el backend API.
-// Requerimientos principales:
-// - Autenticación JWT manual
-// - Endpoints de ingesta de sensores (GPS, combustible, temperatura)
-// - Cálculo predictivo de combustible y alertas
-// - Persistencia en PostgreSQL/SQLite
-// - WebSockets para actualizaciones en tiempo real
-
-console.log('Backend skeleton creado.');
-
-
-import express from 'express';
+﻿import express from 'express';
 import cors from 'cors';
+import { createServer } from 'http';
 import db from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
-import deviceRoutes from './routes/deviceRoutes.js';
-
+import deviceRoutes from './routes/deviceRoutes.js'; 
+import { initWebSocket } from './config/websocket.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-// Registrar rutas
-app.use('/api', authRoutes); // <- Ruta de autenticación conectada
+app.use('/api', authRoutes);
+app.use('/api', deviceRoutes); 
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Servidor corriendo' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor backend escuchando en http://localhost:${PORT}`);
+// Servidor HTTP Combinado
+const server = createServer(app);
+
+// Inicializar WebSockets compartiendo el mismo servidor y puerto
+initWebSocket(server);
+
+server.listen(PORT, () => {
+  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
 });
