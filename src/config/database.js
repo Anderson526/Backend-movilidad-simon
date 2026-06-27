@@ -22,6 +22,7 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
+      full_name TEXT,
       role TEXT NOT NULL DEFAULT 'user'
     )
   `);
@@ -54,8 +55,8 @@ db.serialize(() => {
   db.get("SELECT COUNT(*) as count FROM users", [], (err, row) => {
     if (row && row.count === 0) {
         //users de prueba
-      db.run("INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'admin')");
-      db.run("INSERT INTO users (username, password, role) VALUES ('operador', 'user123', 'user')");
+      db.run("INSERT INTO users (username, password, full_name, role) VALUES ('admin', 'admin123', 'Admin Super', 'admin')");
+      db.run("INSERT INTO users (username, password, full_name, role) VALUES ('operador', 'user123', 'Operador Ejemplo', 'user')");
       
       // Dispositivos de prueba
       db.run("INSERT INTO devices (id, name) VALUES ('DEV-8832-XC54', 'Camión de Carga 1')");

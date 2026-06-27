@@ -1,0 +1,92 @@
+{
+  "info": {
+    "name": "Backend Movilidad - Colección",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección Postman con todos los endpoints del backend para alimentar y probar la API. Variables: {{baseUrl}} y {{token}}."
+  },
+  "variable": [
+    { "key": "protocol", "value": "http" },
+    { "key": "baseHost", "value": "localhost" },
+    { "key": "basePort", "value": "3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{protocol}}://{{baseHost}}:{{basePort}}/health", "protocol": "{{protocol}}", "host": ["{{baseHost}}"], "port": "{{basePort}}", "path": ["health"] },
+        "description": "Verifica que el servidor esté corriendo."
+      }
+    },
+    {
+      "name": "Register (Create user)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"operator1\",\n  \"password\": \"pass123\",\n  \"full_name\": \"Operador Uno\",\n  \"role\": \"user\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{protocol}}://{{baseHost}}:{{basePort}}/api/register", "protocol": "{{protocol}}", "host": ["{{baseHost}}"], "port": "{{basePort}}", "path": ["api","register"] },
+        "description": "Crear un usuario. `role` es opcional (por defecto 'user'). Responde con token."
+      }
+    },
+    {
+      "name": "Login (Obtain JWT)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"operator1\",\n  \"password\": \"pass123\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{protocol}}://{{baseHost}}:{{basePort}}/api/login", "protocol": "{{protocol}}", "host": ["{{baseHost}}"], "port": "{{basePort}}", "path": ["api","login"] },
+        "description": "Autentica y devuelve un JWT en el campo `token`. Copiarlo a la variable {{token}} para endpoints protegidos."
+      }
+    },
+    {
+      "name": "Ingest Telemetry (Public IoT)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"device_id\": \"dev-123-abc\",\n  \"latitude\": -12.034,\n  \"longitude\": -77.042,\n  \"fuel_level\": 45.6,\n  \"temperature\": 32.1,\n  \"speed\": 58.2\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{protocol}}://{{baseHost}}:{{basePort}}/api/telemetry", "protocol": "{{protocol}}", "host": ["{{baseHost}}"], "port": "{{basePort}}", "path": ["api","telemetry"] },
+        "description": "Endpoint público (IoT) para enviar telemetría. Devuelve `predictiveFuelAlert` si se estima baja autonomía."
+      }
+    },
+    {
+      "name": "Get Devices (Protected)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{protocol}}://{{baseHost}}:{{basePort}}/api/devices", "protocol": "{{protocol}}", "host": ["{{baseHost}}"], "port": "{{basePort}}", "path": ["api","devices"] },
+        "description": "Lista el estado actual de la flota. Requiere Authorization: Bearer {{token}}."
+      }
+    },
+    {
+      "name": "Get Stats (Protected)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{protocol}}://{{baseHost}}:{{basePort}}/api/stats", "protocol": "{{protocol}}", "host": ["{{baseHost}}"], "port": "{{basePort}}", "path": ["api","stats"] },
+        "description": "Devuelve estadísticas por usuario. Requiere Authorization: Bearer {{token}}."
+      }
+    }
+  ]
+}
